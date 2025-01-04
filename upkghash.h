@@ -12,6 +12,5 @@ void addEntry(char *name, char *version, char *release);
 void deleteEntry(char *name);
 void list();
 void glob();
-void startsearch();
 void testhash();
 #endif

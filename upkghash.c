@@ -61,7 +61,7 @@ void list() {
     }
 }
 void glob() {
-    printf("\n");
+    //printf("\n");
     for (int i = 0; i < TABLE_SIZE; i++) {
         Entry *current = hashTable[i];
         while (current != NULL) {
@@ -72,22 +72,8 @@ void glob() {
     }
 printf("\n");
 }
-void startsearch() {
-    char *pkg = search_file("installdir/control", "Package: ");
-    if (pkg != NULL) {
-        printf("\n%s\n", pkg);
-        //free(pkg);
-    } else {
-        printf("String not found.\n");
-    }
-    char *new_str = rmstr(pkg, "Package: ");
-    if (new_str == NULL) {
-        printf("Memory allocation failed.\n");
-    }
-    printf("New string: \n%s\n", new_str);
-    //free(new_str);
-}
 void testhash() {
+    printf("\nprinting testhash:\n");
     for (int i = 0; i < TABLE_SIZE; i++) {
         hashTable[i] = NULL;
     }

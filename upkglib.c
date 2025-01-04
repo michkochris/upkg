@@ -43,7 +43,13 @@ printf(CYAN NAME ": " WHITE "%s\n" RESET, text);
 void success(char *text) {
 printf(MAGENTA "==> " WHITE "%s\n" RESET, text);
 }
-
+void testmsg() {
+badmsg("hello error!");
+errormsg("hello error!");
+goodmsg("hello error!");
+usermsg("hello error!");
+success("hello error!");
+}
 void usage() {
 printf("Usage: " NAME " [option] input_file.deb \n");
 printf("Options:\n");
@@ -79,7 +85,7 @@ int remove_dir(const char *destruct_dir) {
 }
 void extract_deb(const char *deb_file, const char *dest_dir) {
     if (remove_dir("installdir") == 0) {
-        printf("Directory removed successfully (or did not exist)\n");
+        printf("Directory removed successfully\n");
     } else {
         printf("Failed to remove directory\n");
     }
@@ -129,27 +135,40 @@ char *search_file(const char *control, const char *str_str) {
     free(line);
     return NULL;
 }
-char *rmstr(char *str, char *sub) {
+char* searchAndReadToEnd(const char* filename, const char* searchString) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return NULL;
+    }
+    char* result = NULL;
+    char line[256];
+    int found = 0;
+    while (fgets(line, sizeof(line), file) != NULL) {
+        if (found) {
+            result = realloc(result, strlen(result) + strlen(line) + 1); 
+            strcat(result, line);
+        } else if (strstr(line, searchString) != NULL) {
+            found = 1;
+            result = malloc(strlen(line) + 1); 
+            strcpy(result, line);
+        }
+    }
+    fclose(file);
+    return result;
+}
+void rmstr(char *str, char *sub) {
     char *result = NULL;
     char *temp = (char *)str;
     int len_sub = strlen(sub);
-    if (len_sub == 0) {
-        return strdup(str);
-    }
     while ((temp = strstr(temp, sub)) != NULL) {
         int len_front = temp - str;
         result = (char *)malloc(strlen(str) - len_sub + 1);
-        if (result == NULL) {
-            return NULL; // Memory allocation failed
-        }
         strncpy(result, str, len_front);
         strcat(result, temp + len_sub);
-        strcpy(str, result); // Update the original string for next iteration
+        strcpy(str, result);
         temp = result + len_front;
     }
-    if (result == NULL) {
-        return strdup(str); // No substring found
-    }
-    return result;
 }
 
+// end of file
