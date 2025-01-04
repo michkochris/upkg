@@ -18,6 +18,7 @@ file description:
 #include <sys/stat.h>
 
 #include "upkglib.h"
+#include "upkghash.h"
 
 int main(int argc, char *argv[]) {
 badmsg("hello error!");
@@ -25,7 +26,6 @@ errormsg("hello error!");
 goodmsg("hello error!");
 usermsg("hello error!");
 success("hello error!");
-
 if (argc < 2) {
    usage();helpmsg();exit(1);
    }
@@ -38,10 +38,14 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      shortversion();versionmsg();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("print found .deb:\n%s\n", argv[i]);
+     extract_deb(argv[i], "installdir");
+     extract_tar_xz("installdir/control.tar.xz", "installdir");
    } else {
      printf("Invalid option: %s\n", argv[i]);
      exit(1);
    }
 }
+startsearch();
+testhash();
 return 0;
 }
