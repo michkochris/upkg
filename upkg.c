@@ -23,10 +23,10 @@ file description:
 struct Controlinfo {
     char pkgname[32];
     char version[32];
+    char arch[32];
     char maintainer[128];
     char homepage[64];
     char sources[128];
-    char arch[32];
     char depends[128];
     char comment[128];
     char description[1028];
