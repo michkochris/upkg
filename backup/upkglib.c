@@ -85,15 +85,16 @@ int remove_dir(const char *destruct_dir) {
 }
 void extract_deb(const char *deb_file, const char *dest_dir) {
     if (remove_dir("installdir") == 0) {
-        printf("Directory removed successfully\n");
+        //printf("Directory removed successfully\n");
     } else {
-        printf("Failed to remove directory\n");
+        printf("Failed to clean unpack directory!\n");
+	exit(1);
     }
     struct stat st = {0};
     if (stat(dest_dir, &st) == -1) {
         // Directory doesn't exist, create it with default permissions (0755)
         if (mkdir(dest_dir, 0755) == -1) {
-            perror("mkdir failed");
+            printf("Failed to create unpack directory failed!");
         }
     }
     char command[256];
@@ -102,9 +103,9 @@ void extract_deb(const char *deb_file, const char *dest_dir) {
     // Execute the command
     int result = system(command);
     if (result == 0) {
-        printf("Successfully extracted %s\n", deb_file);
+        printf("unpacking %s\n", deb_file);
     } else {
-        fprintf(stderr, "Error extracting %s\n", deb_file);
+        fprintf(stderr, "Error unpacking %s!\n", deb_file);
     }
 }
 void extract_tar_xz(const char *tarxz,const char *tdest) {
@@ -112,14 +113,14 @@ void extract_tar_xz(const char *tarxz,const char *tdest) {
     snprintf(command, sizeof(command), "tar -xf %s -C %s", tarxz, tdest);
     int result = system(command);
     if (result != 0) {
-    fprintf(stderr, "Error extracting %s\n", tarxz);
+    fprintf(stderr, "Error extracting %s!\n", tarxz);
     exit(1);
     }
 }
 char *search_file(const char *control, const char *str_str) {
     FILE* file = fopen(control, "r");
     if (file == NULL) {
-        printf("Error opening file: %s\n", control);
+        printf("Error opening file: %s!\n", control);
         return NULL;
     }
     char* line = NULL;
@@ -135,10 +136,10 @@ char *search_file(const char *control, const char *str_str) {
     free(line);
     return NULL;
 }
-char* searchAndReadToEnd(const char* filename, const char* searchString) {
+char *searchandreadtoend(const char* filename, const char* searchString) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        perror("Error opening file");
+        printf("Error opening file %s!\n", filename);
         return NULL;
     }
     char* result = NULL;
@@ -169,6 +170,15 @@ void rmstr(char *str, char *sub) {
         strcpy(str, result);
         temp = result + len_front;
     }
+}
+void remove_white(char *str) {
+    int i, j = 0;
+    for (i = 0; str[i]; i++) {
+        if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n') {
+            str[j++] = str[i];
+        }
+    }
+    str[j] = '\0'; // Null-terminate the modified string
 }
 
 // end of file

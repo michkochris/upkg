@@ -72,12 +72,14 @@ void glob() {
     }
 printf("\n");
 }
+
 void testhash() {
     printf("\nprinting testhash:\n");
     for (int i = 0; i < TABLE_SIZE; i++) {
         hashTable[i] = NULL;
     }
     addEntry("bash", "1.2", "1");
+    
     addEntry("nano", "2.0", "1");
     addEntry("binutils", "1.1", "1");
     addEntry("coreutils", "1.2", "1");

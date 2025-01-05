@@ -1,4 +1,4 @@
 
 
 
-gcc upkg.c upkglib.c upkghash.c -o upkg
+gcc upkg.c upkglib.c upkgstruct.c upkghash.c -o upkg
