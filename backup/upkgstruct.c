@@ -21,8 +21,8 @@ file description:
 #include "upkghash.h"
 #include "upkgstruct.h"
 
-struct Controlinfo gatherinfo() {
-    struct Controlinfo controlinfo;
+struct Pkginfo gatherinfo() {
+    struct Pkginfo controlinfo;
     char *pkgname_search = search_file("installdir/control", "Package: ");
     if (pkgname_search != NULL) {
 	rmstr(pkgname_search, "Package: ");
@@ -146,7 +146,7 @@ struct Controlinfo gatherinfo() {
    return controlinfo;
 }
 
-void printpkginfo(struct Controlinfo controlinfo) {
+void printpkginfo(struct Pkginfo controlinfo) {
     printf("\nprinting pkg struct:\n");
     if (strlen(controlinfo.pkgname) > 0) {
     printf("Package: %s\n", controlinfo.pkgname);}

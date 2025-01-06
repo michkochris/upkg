@@ -22,9 +22,7 @@ file description:
 #include "upkgstruct.h"
 
 int main(int argc, char *argv[]) {
-if (argc < 2) {
-   usage();helpmsg();exit(1);
-   }
+if (argc < 2) {usage();helpmsg();exit(1);}
 for (int i = 1; i < argc; i++) {
 char *filename = argv[i];
 char *extension = strrchr(filename, '.');
@@ -41,8 +39,7 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      exit(1);
    }
 }
-struct Controlinfo info = gatherinfo();
-printpkginfo(info);
+
 testhash();
 return 0;
 }

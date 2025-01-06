@@ -4,8 +4,9 @@
 
 #include "upkglib.h"
 #include "upkghash.h"
+#include "upkgstruct.h"
 
-Entry *hashTable[TABLE_SIZE];
+Pkginfo *hashTable[TABLE_SIZE];
 int hash(char *key) {
     int hashValue = 0;
     for (int i = 0; key[i] != '\0'; i++) {
@@ -13,20 +14,20 @@ int hash(char *key) {
     }
     return hashValue % TABLE_SIZE;
 }
-void addEntry(char *name, char *version, char *release) {
+void addEntry(char *name, char *version, char *arch) {
     int index = hash(name);
-    Entry *newEntry = (Entry *)malloc(sizeof(Entry));
-    strcpy(newEntry->name, name);
+    Pkginfo *newEntry = (Pkginfo *)malloc(sizeof(Pkginfo));
+    strcpy(newEntry->pkgname, name);
     strcpy(newEntry->version, version);
-    strcpy(newEntry->release, release);
+    strcpy(newEntry->arch, arch);
     newEntry->next = hashTable[index];
     hashTable[index] = newEntry;
 }
-Entry *searchEntry(char *name) {
+Pkginfo *searchEntry(char *name) {
     int index = hash(name);
-    Entry *current = hashTable[index];
+    Pkginfo *current = hashTable[index];
     while (current != NULL) {
-        if (strcmp(current->name, name) == 0) {
+        if (strcmp(current->pkgname, name) == 0) {
             return current;
         }
         current = current->next;
@@ -35,10 +36,10 @@ Entry *searchEntry(char *name) {
 }
 void deleteEntry(char *name) {
     int index = hash(name);
-    Entry *current = hashTable[index];
-    Entry *prev = NULL;
+    Pkginfo *current = hashTable[index];
+    Pkginfo *prev = NULL;
     while (current != NULL) {
-        if (strcmp(current->name, name) == 0) {
+        if (strcmp(current->pkgname, name) == 0) {
             if (prev == NULL) {
                 hashTable[index] = current->next;
             } else {
@@ -53,27 +54,27 @@ void deleteEntry(char *name) {
 }
 void list() {
     for (int i = 0; i < TABLE_SIZE; i++) {
-        Entry *current = hashTable[i];
+        Pkginfo *current = hashTable[i];
         while (current != NULL) {
-            printf("%s-%s-%s\n", current->name, current->version, current->release);
+            printf("%s-%s-%s\n", current->pkgname, current->version, current->arch);
             current = current->next;
         }
     }
 }
 void glob() {
-    //printf("\n");
     for (int i = 0; i < TABLE_SIZE; i++) {
-        Entry *current = hashTable[i];
+        Pkginfo *current = hashTable[i];
         while (current != NULL) {
-            printf("%s-%s-%s ", current->name, current->version, current->release);
+            printf("%s-%s-%s ", current->pkgname, current->version, current->arch);
             current = current->next;
         }
-        //printf("\n");
     }
 printf("\n");
 }
 
 void testhash() {
+struct Pkginfo info = gatherinfo();
+printpkginfo(info);
     printf("\nprinting testhash:\n");
     for (int i = 0; i < TABLE_SIZE; i++) {
         hashTable[i] = NULL;
@@ -86,11 +87,11 @@ void testhash() {
     addEntry("findutils", "2.0", "1");
     addEntry("util-linux", "1.1", "1");
     printf("Search for nano: \n");
-    Entry *nano = searchEntry("nano");
-    printf("%s\n", nano->name);
-    Entry *found = searchEntry("nano");
+    Pkginfo *nano = searchEntry("nano");
+    printf("%s\n", nano->pkgname);
+    Pkginfo *found = searchEntry("nano");
     if (found != NULL) {
-        printf("%s-%s-%s\n", found->name, found->version, found->release);
+        printf("%s-%s-%s\n", found->pkgname, found->version, found->arch);
     } else {
         printf("Not found\n");
     }
