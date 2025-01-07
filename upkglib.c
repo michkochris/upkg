@@ -16,17 +16,13 @@ file description:
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
 
-#define NAME    "upkg"
-#define VERSION "1.0"
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define WHITE   "\x1b[0;37m"
-#define RESET   "\x1b[0m"
+#include "upkglib.h"
+#include "upkghash.h"
+#include "upkgstruct.h"
+#include "upkgconfig.h"
 
 void badmsg(char *text) {
 printf(YELLOW "==> " WHITE "%s\n" RESET, text);
@@ -43,7 +39,7 @@ printf(CYAN NAME ": " WHITE "%s\n" RESET, text);
 void success(char *text) {
 printf(MAGENTA "==> " WHITE "%s\n" RESET, text);
 }
-void testmsg() {
+void medusa() {
 badmsg("hello error!");
 errormsg("hello error!");
 goodmsg("hello error!");
@@ -75,6 +71,24 @@ printf("License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl
 printf("This is free software: you are free to change and redistribute it.\n");
 printf("There is NO WARRANTY, to the extent permitted by law.\n");
 }
+int create_dir(const char *path) {
+    struct stat st;
+    if (stat(path, &st) == -1) {
+        if (errno == ENOENT) {
+            if (mkdir(path, 0755) == -1) {
+                perror("mkdir failed");
+                return -1;
+            }
+        } else {
+            perror("stat failed");
+            return -1;
+        }
+    } else if (!S_ISDIR(st.st_mode)) {
+        fprintf(stderr, "%s exists, but is not a directory\n", path);
+        return -1;
+    }
+    return 0;
+}
 int remove_dir(const char *destruct_dir) {
     if (rmdir(destruct_dir) == 0) {
         return 0;
@@ -82,6 +96,23 @@ int remove_dir(const char *destruct_dir) {
     char command[256];
     snprintf(command, sizeof(command), "rm -rf %s", destruct_dir);
     return system(command);
+}
+char *concat_path(const char *dir, const char *filename) {
+    // Calculate the length of the resulting path
+    size_t dir_len = strlen(dir);
+    size_t filename_len = strlen(filename);
+    size_t total_len = dir_len + filename_len + 2; // +2 for '/' and '\0'
+    // Allocate memory for the resulting path
+    char* result = (char*)malloc(total_len);
+    if (result == NULL) {
+        perror("Memory allocation failed");
+        return NULL;
+    }
+    // Concatenate the directory, separator, and filename
+    strcpy(result, dir);
+    //strcat(result, "/");
+    strcat(result, filename);
+    return result;
 }
 void extract_deb(const char *deb_file, const char *dest_dir) {
     if (remove_dir("upkgdir/staging") == 0) {

@@ -20,10 +20,15 @@ file description:
 #include "upkglib.h"
 #include "upkghash.h"
 #include "upkgstruct.h"
+#include "upkgconfig.h"
 
 struct Pkginfo gatherinfo() {
     struct Pkginfo controlinfo;
-    char *pkgname_search = search_file("upkgdir/staging/control", "Package: ");
+    char *configfile = "upkgconfig";
+    char *control_dir = get_config_value(configfile, "control_dir");
+    char *controlfile = concat_path(control_dir, "control");
+    //printf("controltar=%s\n", controlfile);
+    char *pkgname_search = search_file(controlfile, "Package: ");
     if (pkgname_search != NULL) {
 	rmstr(pkgname_search, "Package: ");
 	remove_white(pkgname_search);
@@ -35,7 +40,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Package: is mandatory!\n");
     }
-    char *version_search = search_file("upkgdir/staging/control", "Version: ");
+    char *version_search = search_file(controlfile, "Version: ");
     if (version_search != NULL) {
 	rmstr(version_search, "Version: ");
 	remove_white(version_search);
@@ -47,7 +52,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Version: is mandatory!\n");
     }
-    char *arch_search = search_file("upkgdir/staging/control", "Architecture: ");
+    char *arch_search = search_file(controlfile, "Architecture: ");
     if (arch_search != NULL) {
 	rmstr(arch_search, "Architecture: ");
 	remove_white(arch_search);
@@ -59,7 +64,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Architecture: is mandatory!\n");
     }
-    char *maintainer_search = search_file("upkgdir/staging/control", "Maintainer: ");
+    char *maintainer_search = search_file(controlfile, "Maintainer: ");
     if (maintainer_search != NULL) {
 	rmstr(maintainer_search, "Maintainer: ");
 	remove_white(maintainer_search);
@@ -71,7 +76,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Maintainer: is mandatory!\n");
     }
-    char *homepage_search = search_file("upkgdir/staging/control", "Homepage: ");
+    char *homepage_search = search_file(controlfile, "Homepage: ");
     if (homepage_search != NULL) {
 	rmstr(homepage_search, "Homepage: ");
 	strcpy(controlinfo.homepage, homepage_search);
@@ -82,7 +87,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Homepage: is recommended!\n");
     }
-    char *sources_search = search_file("upkgdir/staging/control", "Source: ");
+    char *sources_search = search_file(controlfile, "Source: ");
     if (sources_search != NULL) {
 	rmstr(sources_search, "Source: ");
 	strcpy(controlinfo.sources, sources_search);
@@ -93,7 +98,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Source: is recommended!\n");
     }
-    char *section_search = search_file("upkgdir/staging/control", "Section: ");
+    char *section_search = search_file(controlfile, "Section: ");
     if (section_search != NULL) {
         rmstr(section_search, "Section: ");
         strcpy(controlinfo.section, section_search);
@@ -104,7 +109,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Section: is recommended!\n");
     }
-    char *priority_search = search_file("upkgdir/staging/control", "Priority: ");
+    char *priority_search = search_file(controlfile, "Priority: ");
     if (priority_search != NULL) {
         rmstr(priority_search, "Priority: ");
         strcpy(controlinfo.priority, priority_search);
@@ -115,7 +120,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Priority: is recommended!\n");
     }
-    char *depends_search = search_file("upkgdir/staging/control", "Depends: ");
+    char *depends_search = search_file(controlfile, "Depends: ");
     if (depends_search != NULL) {
 	rmstr(depends_search, "Depends: ");
 	strcpy(controlinfo.depends, depends_search);
@@ -126,7 +131,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Depends: is recommended!\n");
     }
-    char *comment_search = search_file("upkgdir/staging/control", "Comment: ");
+    char *comment_search = search_file(controlfile, "Comment: ");
     if (comment_search != NULL) {
 	rmstr(comment_search, "Comment: ");
 	strcpy(controlinfo.comment, comment_search);
@@ -134,7 +139,7 @@ struct Pkginfo gatherinfo() {
     } else {
         printf("Comment: is not recommended!\n");
     }
-    char *description_search = searchandreadtoend("upkgdir/staging/control", "Description: ");
+    char *description_search = searchandreadtoend(controlfile, "Description: ");
     if (description_search != NULL) {
 	rmstr(description_search, "Description: ");
 	strcpy(controlinfo.description, description_search);
