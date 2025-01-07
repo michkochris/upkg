@@ -9,7 +9,7 @@ void testmsg();
 void usage();
 void helpmsg();
 void shortversion();
-void versionmsg();
+void longversion();
 int remove_dir(const char *destruct_dir);
 void extract_deb(const char *deb_file, const char *dest_dir);
 void extract_tar_xz(const char *tarxz,const char *tdest);

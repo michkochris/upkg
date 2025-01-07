@@ -68,7 +68,7 @@ printf("General help using upkg and ulinux: <facebook.group>\n");
 void shortversion() {
 printf("upkg (ulinux) 1.0\n");
 }
-void versionmsg() {
+void longversion() {
 printf("\n");
 printf("Copyright (C) 2007 Free Software Foundation, Inc.\n");
 printf("License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n");
@@ -84,26 +84,23 @@ int remove_dir(const char *destruct_dir) {
     return system(command);
 }
 void extract_deb(const char *deb_file, const char *dest_dir) {
-    if (remove_dir("installdir") == 0) {
+    if (remove_dir("upkgdir/staging") == 0) {
         //printf("Directory removed successfully\n");
     } else {
-        printf("Failed to clean unpack directory!\n");
+        printf("Failed to clean staging directory!\n");
 	exit(1);
     }
     struct stat st = {0};
     if (stat(dest_dir, &st) == -1) {
-        // Directory doesn't exist, create it with default permissions (0755)
         if (mkdir(dest_dir, 0755) == -1) {
-            printf("Failed to create unpack directory failed!");
+            printf("Failed to create staging directory!");
         }
     }
     char command[256];
-    // Construct the command to extract the .deb file using 'ar'
     snprintf(command, sizeof(command), "ar -x --output %s %s", dest_dir, deb_file);
-    // Execute the command
     int result = system(command);
     if (result == 0) {
-        printf("unpacking %s\n", deb_file);
+        //printf("unpacking %s\n", deb_file);
     } else {
         fprintf(stderr, "Error unpacking %s!\n", deb_file);
     }

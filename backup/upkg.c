@@ -29,11 +29,11 @@ char *extension = strrchr(filename, '.');
 if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      usage();helpmsg();exit(1);
    } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
-     shortversion();versionmsg();exit(1);
+     shortversion();longversion();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
-     printf("print found .deb:\n%s\n", argv[i]);
-     extract_deb(argv[i], "installdir");
-     extract_tar_xz("installdir/control.tar.xz", "installdir");
+     printf("processing %s\n\n", argv[i]);
+     extract_deb(argv[i], "upkgdir/staging");
+     extract_tar_xz("upkgdir/staging/control.tar.xz", "upkgdir/staging");
    } else {
      printf("Invalid option: %s\n", argv[i]);
      exit(1);

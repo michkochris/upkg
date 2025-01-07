@@ -1,101 +1,153 @@
+/*
+author: michkochris
+email: michkochris@gmail.com
+date: started 12-31-2024
+license: GPLV3
+notice: This program is free software:
+you can redistribute it and/or modify it
+under the terms of the GNU General Public Lic>
+Only the name of the program is copyrighted...
+If you reuse code, please give credits...
+file description:
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include "upkglib.h"
 #include "upkghash.h"
 #include "upkgstruct.h"
 
-Pkginfo *hashTable[TABLE_SIZE];
-int hash(char *key) {
-    int hashValue = 0;
-    for (int i = 0; key[i] != '\0'; i++) {
-        hashValue += key[i];
+Node* hashTable[TABLE_SIZE];
+
+int hashFunction(char* name) {
+    int hash = 0;
+    for (int i = 0; name[i] != '\0'; i++) {
+        hash += name[i];
     }
-    return hashValue % TABLE_SIZE;
+    return hash % TABLE_SIZE;
 }
-void addEntry(char *name, char *version, char *arch) {
-    int index = hash(name);
-    Pkginfo *newEntry = (Pkginfo *)malloc(sizeof(Pkginfo));
-    strcpy(newEntry->pkgname, name);
-    strcpy(newEntry->version, version);
-    strcpy(newEntry->arch, arch);
-    newEntry->next = hashTable[index];
-    hashTable[index] = newEntry;
+void addpkg(char* name) {
+    int index = hashFunction(name);
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    strcpy(newNode->data.pkgname, name);
+    newNode->next = hashTable[index];
+    hashTable[index] = newNode;
 }
-Pkginfo *searchEntry(char *name) {
-    int index = hash(name);
-    Pkginfo *current = hashTable[index];
+Pkginfo* search(char* name) {
+    int index = hashFunction(name);
+    Node* current = hashTable[index];
     while (current != NULL) {
-        if (strcmp(current->pkgname, name) == 0) {
-            return current;
+        if (strcmp(current->data.pkgname, name) == 0) {
+            return &(current->data);
         }
         current = current->next;
     }
     return NULL;
 }
-void deleteEntry(char *name) {
-    int index = hash(name);
-    Pkginfo *current = hashTable[index];
-    Pkginfo *prev = NULL;
-    while (current != NULL) {
-        if (strcmp(current->pkgname, name) == 0) {
-            if (prev == NULL) {
-                hashTable[index] = current->next;
-            } else {
-                prev->next = current->next;
-            }
-            free(current);
-            return;
-        }
+void removepkg(char* name) {
+    int index = hashFunction(name);
+    Node* current = hashTable[index];
+    Node* prev = NULL;
+    while (current != NULL && strcmp(current->data.pkgname, name) != 0) {
         prev = current;
         current = current->next;
+    }
+    if (current != NULL) {
+        if (prev == NULL) {
+            hashTable[index] = current->next;
+        } else {
+            prev->next = current->next;
+        }
+        free(current);
     }
 }
 void list() {
     for (int i = 0; i < TABLE_SIZE; i++) {
-        Pkginfo *current = hashTable[i];
+        Node *current = hashTable[i];
         while (current != NULL) {
-            printf("%s-%s-%s\n", current->pkgname, current->version, current->arch);
-            current = current->next;
-        }
-    }
-}
-void glob() {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        Pkginfo *current = hashTable[i];
-        while (current != NULL) {
-            printf("%s-%s-%s ", current->pkgname, current->version, current->arch);
+            printf("%s\n", current->data.pkgname);
             current = current->next;
         }
     }
 printf("\n");
 }
-
-void testhash() {
-struct Pkginfo info = gatherinfo();
-printpkginfo(info);
-    printf("\nprinting testhash:\n");
+void glob() {
     for (int i = 0; i < TABLE_SIZE; i++) {
-        hashTable[i] = NULL;
+        Node *current = hashTable[i];
+        while (current != NULL) {
+            printf("%s ", current->data.pkgname);
+            current = current->next;
+        }
     }
-    addEntry("bash", "1.2", "1");
-    
-    addEntry("nano", "2.0", "1");
-    addEntry("binutils", "1.1", "1");
-    addEntry("coreutils", "1.2", "1");
-    addEntry("findutils", "2.0", "1");
-    addEntry("util-linux", "1.1", "1");
-    printf("Search for nano: \n");
-    Pkginfo *nano = searchEntry("nano");
-    printf("%s\n", nano->pkgname);
-    Pkginfo *found = searchEntry("nano");
+printf("\n");
+}
+void initialadd() {
+    struct Pkginfo info = gatherinfo();
+    //printpkginfo(info);
+    int index = hashFunction(info.pkgname);
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    strcpy(newNode->data.pkgname, info.pkgname);
+    strcpy(newNode->data.version, info.version);
+    strcpy(newNode->data.arch, info.arch);
+    strcpy(newNode->data.maintainer, info.maintainer);
+    strcpy(newNode->data.homepage, info.homepage);
+    strcpy(newNode->data.sources, info.sources);
+    strcpy(newNode->data.section, info.section);
+    strcpy(newNode->data.priority, info.priority);
+    strcpy(newNode->data.depends, info.depends);
+    strcpy(newNode->data.comment, info.comment);
+    strcpy(newNode->data.description, info.description);
+    newNode->next = hashTable[index];
+    hashTable[index] = newNode;
+}
+void initialsearch(char *name) {
+Pkginfo *found = search(name);
     if (found != NULL) {
-        printf("%s-%s-%s\n", found->pkgname, found->version, found->arch);
-    } else {
-        printf("Not found\n");
-    }
-    list();
-    deleteEntry("nano");
-    glob();
+    printf("printing initialsearch:\n");}
+    if (strlen(found->pkgname) > 0) {
+    printf("Package: %s\n", found->pkgname);}
+    if (strlen(found->version) > 0) {
+    printf("Version: %s\n", found->version);}
+    if (strlen(found->arch) > 0) {
+    printf("Architecture: %s\n", found->arch);}
+    if (strlen(found->maintainer) > 0) {
+    printf("Maintainer: %s\n", found->maintainer);}
+    if (strlen(found->homepage) > 0) {
+    printf("Homepage: %s", found->homepage);}
+    if (strlen(found->sources) > 0) {
+    printf("Source: %s\n", found->sources);}
+    if (strlen(found->section) > 0) {
+    printf("Section: %s", found->section);}
+    if (strlen(found->priority) > 0) {
+    printf("Priority: %s", found->priority);}
+    if (strlen(found->depends) > 0) {
+    printf("Depends: %s\n", found->depends);}
+    if (strlen(found->comment) > 0) {
+    printf("Comment: %s\n", found->comment);}
+    if (strlen(found->description) > 0) {
+    printf("Description: %s\n", found->description);}
+    else {
+    printf("initialsearch: Not found\n");}
+}
+void testhash() {
+addpkg("binutils");
+addpkg("findutils");
+addpkg("coreutils");
+addpkg("util-linux");
+addpkg("gawk");
+addpkg("bash");
+addpkg("neofetch");
+addpkg("nano");
+initialadd();
+initialsearch("file");
+removepkg("bash");
+removepkg("nano");
+Pkginfo *srch = search("file");
+printf("search: %s\n", srch->pkgname);
+list();
+glob();
 }

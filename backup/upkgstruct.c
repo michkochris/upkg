@@ -23,125 +23,127 @@ file description:
 
 struct Pkginfo gatherinfo() {
     struct Pkginfo controlinfo;
-    char *pkgname_search = search_file("installdir/control", "Package: ");
+    char *pkgname_search = search_file("upkgdir/staging/control", "Package: ");
     if (pkgname_search != NULL) {
 	rmstr(pkgname_search, "Package: ");
 	remove_white(pkgname_search);
 	strcpy(controlinfo.pkgname, pkgname_search);
 	free(pkgname_search);
         if (strlen(pkgname_search) == 0) {
-            printf("error: Package: field is empty!\n");
+            printf("Package: field is found but is empty!\n");
         }
     } else {
-        printf("error: Package: is not present!\n");
+        printf("Package: is mandatory!\n");
     }
-    char *version_search = search_file("installdir/control", "Version: ");
+    char *version_search = search_file("upkgdir/staging/control", "Version: ");
     if (version_search != NULL) {
 	rmstr(version_search, "Version: ");
 	remove_white(version_search);
 	strcpy(controlinfo.version, version_search);
 	free(version_search);
         if (strlen(version_search) == 0) {
-            printf("error: Version: field is empty!\n");
+            printf("Version: field is found but is empty!\n");
         }
     } else {
-        printf("error: Version: is not present!\n");
+        printf("Version: is mandatory!\n");
     }
-    char *arch_search = search_file("installdir/control", "Architecture: ");
+    char *arch_search = search_file("upkgdir/staging/control", "Architecture: ");
     if (arch_search != NULL) {
 	rmstr(arch_search, "Architecture: ");
 	remove_white(arch_search);
 	strcpy(controlinfo.arch, arch_search);
 	free(arch_search);
         if (strlen(arch_search) == 0) {
-            printf("error: Architecture: field is empty!\n");
+            printf("Architecture: field is found but is empty!\n");
         }
     } else {
-        printf("error: Architecture: is not present!\n");
+        printf("Architecture: is mandatory!\n");
     }
-    char *maintainer_search = search_file("installdir/control", "Maintainer: ");
+    char *maintainer_search = search_file("upkgdir/staging/control", "Maintainer: ");
     if (maintainer_search != NULL) {
 	rmstr(maintainer_search, "Maintainer: ");
 	remove_white(maintainer_search);
 	strcpy(controlinfo.maintainer, maintainer_search);
 	free(maintainer_search);
         if (strlen(maintainer_search) == 0) {
-            printf("error: Maintainer: field is empty!\n");
+            printf("Maintainer: field is found but is empty!\n");
         }
     } else {
-        printf("error: Maintainer: is not present!\n");
+        printf("Maintainer: is mandatory!\n");
     }
-    char *homepage_search = search_file("installdir/control", "Homepage: ");
+    char *homepage_search = search_file("upkgdir/staging/control", "Homepage: ");
     if (homepage_search != NULL) {
 	rmstr(homepage_search, "Homepage: ");
 	strcpy(controlinfo.homepage, homepage_search);
 	free(homepage_search);
         if (strlen(homepage_search) == 0) {
-            printf("error: Homepage: field is empty!\n");
+            printf("Homepage: field is found but is empty!\n");
         }
     } else {
-        printf("error: Homepage: is not present!\n");
+        printf("Homepage: is recommended!\n");
     }
-    char *sources_search = search_file("installdir/control", "Source: ");
+    char *sources_search = search_file("upkgdir/staging/control", "Source: ");
     if (sources_search != NULL) {
 	rmstr(sources_search, "Source: ");
 	strcpy(controlinfo.sources, sources_search);
 	free(sources_search);
         if (strlen(sources_search) == 0) {
-            printf("error: Source: field is empty!\n");
+            printf("Source: field is found but is empty!\n");
         }
     } else {
-        printf("error: Source: is not present!\n");
+        printf("Source: is recommended!\n");
     }
-    char *section_search = search_file("installdir/control", "Section: ");
+    char *section_search = search_file("upkgdir/staging/control", "Section: ");
     if (section_search != NULL) {
         rmstr(section_search, "Section: ");
         strcpy(controlinfo.section, section_search);
         free(section_search);
         if (strlen(section_search) == 0) {
-            printf("warning: Section: field is empty!\n");
+            printf("Section: field is found but is empty!\n");
         }
     } else {
-        printf("warning: Section: is not present!\n");
+        printf("Section: is recommended!\n");
     }
-    char *priority_search = search_file("installdir/control", "Priority: ");
+    char *priority_search = search_file("upkgdir/staging/control", "Priority: ");
     if (priority_search != NULL) {
         rmstr(priority_search, "Priority: ");
         strcpy(controlinfo.priority, priority_search);
         free(priority_search);
         if (strlen(priority_search) == 0) {
-            printf("warning: Priority: field is empty!\n");
+            printf("Priority: field is found but is empty!\n");
         }
     } else {
-        printf("warning: Priority: is not present!\n");
+        printf("Priority: is recommended!\n");
     }
-    char *depends_search = search_file("installdir/control", "Depends: ");
+    char *depends_search = search_file("upkgdir/staging/control", "Depends: ");
     if (depends_search != NULL) {
 	rmstr(depends_search, "Depends: ");
 	strcpy(controlinfo.depends, depends_search);
 	free(depends_search);
         if (strlen(depends_search) == 0) {
-            printf("warning: Depends: field is empty!\n");
+            printf("Depends: field is found but is empty!\n");
         }
     } else {
-        printf("warning: Depends: is not present!\n");
+        printf("Depends: is recommended!\n");
     }
-    char *comment_search = search_file("installdir/control", "Comment: ");
+    char *comment_search = search_file("upkgdir/staging/control", "Comment: ");
     if (comment_search != NULL) {
 	rmstr(comment_search, "Comment: ");
 	strcpy(controlinfo.comment, comment_search);
 	free(comment_search);
+    } else {
+        printf("Comment: is not recommended!\n");
     }
-    char *description_search = searchandreadtoend("installdir/control", "Description: ");
+    char *description_search = searchandreadtoend("upkgdir/staging/control", "Description: ");
     if (description_search != NULL) {
 	rmstr(description_search, "Description: ");
 	strcpy(controlinfo.description, description_search);
 	free(description_search);
         if (strlen(description_search) == 0) {
-            printf("error: Description field is empty!\n");
+            printf("Description: field is found but is empty!\n");
         }
     } else {
-        printf("error: Description: is not present!\n");
+        printf("Description: field is mandatory!\n");
     }
    return controlinfo;
 }

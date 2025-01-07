@@ -13,13 +13,10 @@ typedef struct Pkginfo {
     char depends[128];
     char comment[128];
     char description[1028];
-    struct Pkginfo *next;
 } Pkginfo;
-int hash(char *key);
-void addEntry(char *name, char *version, char *arch);
-Pkginfo *searchEntry(char *name);
-void deleteEntry(char *name);
-void list();
-void glob();
+typedef struct Node {
+    Pkginfo data;
+    struct Node* next;
+} Node;
 void testhash();
 #endif
