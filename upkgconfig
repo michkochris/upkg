@@ -1,0 +1,29 @@
+# author: michkochris
+# email: michkochris@gmail.com
+# date: started 12-31-2024
+# license: GPLV3
+# notice: This program is free software:
+# you can redistribute it and/or modify it
+# under the terms of the GNU General Public Lic>
+# Only the name of the program is copyrighted...
+# If you reuse code, please give credits...
+#
+# file description: upkg config settings
+
+# make sure to leave trailing /
+
+# main directory where upkg does work
+upkg_dir=upkg_dir/
+
+# directory where upkg unpacks .deb pkg info
+# where upkg processes .deb control files  
+control_dir=upkg_dir/controldir/
+
+# directory where upkg unpacks pkg files
+# upkg creates a list of files to be installed
+unpack_dir=upkg_dir/unpackdir/
+
+# main directory where upkg installs programs
+# normally / unless testing and developing
+#installdir=/
+install_dir=upkg_dir/installdir/
