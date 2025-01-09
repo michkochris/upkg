@@ -1,7 +1,7 @@
 /******************************************************************************
  *  Filename:    upkgstruct.c
  *  Author:      <michkochris@gmail.com>
- *  Date:        started0 12-31-2024
+ *  Date:        started 12-31-2024
  *  Description: upkg manages linux .deb pkg's
  *
  *  Copyright (c) 2025 upkg (ulinux) All rights reserved.
