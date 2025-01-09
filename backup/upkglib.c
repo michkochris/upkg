@@ -1,15 +1,25 @@
-/*
-author: michkochris
-email: michkochris@gmail.com
-date: started 12-31-2024
-license: GPLV3
-notice: This program is free software:
-you can redistribute it and/or modify it
-under the terms of the GNU General Public Lic>
-Only the name of the program is copyrighted...
-If you reuse code, please give credits...
-file description:
-*/
+/******************************************************************************
+ *  Filename:    upkglib.c
+ *  Author:      <michkochris@gmail.com>
+ *  Date:        started0 12-31-2024
+ *  Description: upkg manages linux .deb pkg's
+ *
+ *  Copyright (c) 2025 upkg (ulinux) All rights reserved.
+ *  GPLV3
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ *  more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program. If not, see <https://www.gnu.org/licenses/>.
+ ******************************************************************************/
+/*file description: file with misc functions to help upkg*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,14 +56,14 @@ goodmsg("hello error!");
 usermsg("hello error!");
 success("hello error!");
 }
-void usage() {
+void usage_info() {
 printf("Usage: " NAME " [option] input_file.deb \n");
 printf("Options:\n");
 printf("  -v  --version Display version info\n");
 printf("  -h  --help    Display help messages\n");
 }
-void helpmsg() {
-printf("\n");
+void help_msg() {
+printf("\n\n");
 printf("Report bugs directly to: michkochris@gmail.com\n");
 printf("Or file a bug report on github... \n");
 printf("upkg (ulinux) home page: <https://www.ulinux.com>\n");
@@ -61,12 +71,12 @@ printf("upkg github page <github/upkg>\n");
 printf("ulinux github page <github/ulinux>\n");
 printf("General help using upkg and ulinux: <facebook.group>\n");
 }
-void shortversion() {
+void version_info() {
 printf("upkg (ulinux) 1.0\n");
 }
-void longversion() {
+void license_info() {
 printf("\n");
-printf("Copyright (C) 2007 Free Software Foundation, Inc.\n");
+printf("Copyright (C) 2025 upkg (ulinux) Christoper Michko\n");
 printf("License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n");
 printf("This is free software: you are free to change and redistribute it.\n");
 printf("There is NO WARRANTY, to the extent permitted by law.\n");

@@ -1,15 +1,25 @@
-/*
-author: michkochris
-email: michkochris@gmail.com
-date: started 12-31-2024
-license: GPLV3
-notice: This program is free software:
-you can redistribute it and/or modify it
-under the terms of the GNU General Public Lic>
-Only the name of the program is copyrighted...
-If you reuse code, please give credits...
-file description:
-*/
+/******************************************************************************
+ *  Filename:    upkghash.c
+ *  Author:      <michkochris@gmail.com>
+ *  Date:        started0 12-31-2024
+ *  Description: upkg manages linux .deb pkg's
+ *
+ *  Copyright (c) 2025 upkg (ulinux) All rights reserved.
+ *  GPLV3
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ *  more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program. If not, see <https://www.gnu.org/licenses/>.
+ ******************************************************************************/
+/*file description: file for adding pkginfo into hash table for storage...*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -103,35 +113,50 @@ void initialadd() {
     strcpy(newNode->data.description, info.description);
     newNode->next = hashTable[index];
     hashTable[index] = newNode;
+    resetstruct(&info);
 }
 void initialsearch(char *name) {
-Pkginfo *found = search(name);
+    Pkginfo *found = search(name);
     if (found != NULL) {
-    printf("printing initialsearch:\n");}
-    if (strlen(found->pkgname) > 0) {
-    printf("Package: %s\n", found->pkgname);}
-    if (strlen(found->version) > 0) {
-    printf("Version: %s\n", found->version);}
-    if (strlen(found->arch) > 0) {
-    printf("Architecture: %s\n", found->arch);}
-    if (strlen(found->maintainer) > 0) {
-    printf("Maintainer: %s\n", found->maintainer);}
-    if (strlen(found->homepage) > 0) {
-    printf("Homepage: %s", found->homepage);}
-    if (strlen(found->sources) > 0) {
-    printf("Source: %s\n", found->sources);}
-    if (strlen(found->section) > 0) {
-    printf("Section: %s", found->section);}
-    if (strlen(found->priority) > 0) {
-    printf("Priority: %s", found->priority);}
-    if (strlen(found->depends) > 0) {
-    printf("Depends: %s\n", found->depends);}
-    if (strlen(found->comment) > 0) {
-    printf("Comment: %s\n", found->comment);}
-    if (strlen(found->description) > 0) {
-    printf("Description: %s\n", found->description);}
-    else {
-    printf("initialsearch: Not found\n");}
+        printf("printing initialsearch:\n");
+        if (strlen(found->pkgname) > 0) {
+            printf("Package: %s\n", found->pkgname);
+        }
+        if (strlen(found->version) > 0) {
+            printf("Version: %s\n", found->version);
+        }
+        if (strlen(found->arch) > 0) {
+            printf("Architecture: %s\n", found->arch);
+        }
+        if (strlen(found->maintainer) > 0) {
+            printf("Maintainer: %s\n", found->maintainer);
+        }
+        if (strlen(found->homepage) > 0) {
+            printf("Homepage: %s", found->homepage);
+        }
+        if (strlen(found->sources) > 0) {
+            printf("Source: %s\n", found->sources);
+        }
+        if (strlen(found->section) > 0) {
+            printf("Section: %s", found->section);
+        }
+        if (strlen(found->priority) > 0) {
+            printf("Priority: %s", found->priority);
+        }
+        if (strlen(found->depends) > 0) {
+            printf("Depends: %s\n", found->depends);
+        }
+        if (strlen(found->comment) > 0) {
+            printf("Comment: %s\n", found->comment);
+        }
+        if (strlen(found->description) > 0) {
+            printf("Description: %s\n", found->description);
+        }
+    } else {
+        printf("initialsearch: Not found\n");
+    }
+    //resetstruct(&found);
+    free(found);
 }
 void testhash() {
 addpkg("binutils");

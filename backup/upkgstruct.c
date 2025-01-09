@@ -1,15 +1,25 @@
-/*
-author: michkochris
-email: michkochris@gmail.com
-date: started 12-31-2024
-license: GPLV3
-notice: This program is free software:
-you can redistribute it and/or modify it
-under the terms of the GNU General Public License.
-Only the name of the program is copyrighted...
-If you reuse code, please give credits...
-file description:
-*/
+/******************************************************************************
+ *  Filename:    upkgstruct.c
+ *  Author:      <michkochris@gmail.com>
+ *  Date:        started0 12-31-2024
+ *  Description: upkg manages linux .deb pkg's
+ *
+ *  Copyright (c) 2025 upkg (ulinux) All rights reserved.
+ *  GPLV3
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ *  more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program. If not, see <https://www.gnu.org/licenses/>.
+ ******************************************************************************/
+/*file description: file to gather pkg info into a struct from a .deb control file*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -177,6 +187,9 @@ void printpkginfo(struct Pkginfo controlinfo) {
     printf("Comment: %s\n", controlinfo.comment);}
     if (strlen(controlinfo.description) > 0) {
     printf("Description: %s\n", controlinfo.description);}
-    
 }
+void resetstruct(struct Pkginfo *p) {
+    memset(p, 0, sizeof(struct Pkginfo));
+}
+// end of file
 

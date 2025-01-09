@@ -1,15 +1,25 @@
-/*
-author: michkochris
-email: michkochris@gmail.com
-date: started 12-31-2024
-license: GPLV3
-notice: This program is free software:
-you can redistribute it and/or modify it
-under the terms of the GNU General Public License.
-Only the name of the program is copyrighted...
-If you reuse code, please give credits...
-file description:
-*/
+/******************************************************************************
+ *  Filename:    upkg.c
+ *  Author:      michkochris@gmail.com
+ *  Date:        started0 12-31-2024
+ *  Description: upkg manages linux .deb pkg's
+ *
+ *  Copyright (c) 2025 upkg (ulinux) All rights reserved.
+ *  GPLV3
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ *  more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program. If not, see <https://www.gnu.org/licenses/>.
+ ******************************************************************************/
+/*file description: main c file for managing intc argv*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,14 +46,18 @@ void process_upkg(char *deb_file) {
 
 int main(int argc, char *argv[]) {
 check_upkgconfig();
-if (argc < 2) {usage();helpmsg();exit(1);}
+if (argc < 2) {usage_info();help_msg();exit(1);}
 for (int i = 1; i < argc; i++) {
 char *filename = argv[i];
 char *extension = strrchr(filename, '.');
 if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-     usage();helpmsg();exit(1);
+     usage_info();help_msg();exit(1);
    } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
-     shortversion();longversion();exit(1);
+     version_info();;exit(1);
+   } else if (strcmp(argv[i], "--license") == 0) {
+     version_info();license_info();exit(1);
+   } else if (strcmp(argv[i], "--config") == 0) {
+     print_config();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
      process_upkg(argv[i]);

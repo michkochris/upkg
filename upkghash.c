@@ -95,6 +95,18 @@ void glob() {
     }
 printf("\n");
 }
+// Print all items in the hash table, showing collisions
+void print_hash_table() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        printf("Index %d: ", i);
+        Node *current = hashTable[i];
+        while (current != NULL) {
+            printf("(%s) -> ", current->data.pkgname);
+            current = current->next;
+        }
+        printf("NULL\n");
+    }
+}
 void initialadd() {
     struct Pkginfo info = gatherinfo();
     //printpkginfo(info);
@@ -174,5 +186,6 @@ removepkg("nano");
 Pkginfo *srch = search("file");
 printf("search: %s\n", srch->pkgname);
 list();
+print_hash_table();
 glob();
 }
