@@ -56,14 +56,14 @@ goodmsg("hello error!");
 usermsg("hello error!");
 success("hello error!");
 }
-void usage() {
+void usage_info() {
 printf("Usage: " NAME " [option] input_file.deb \n");
 printf("Options:\n");
 printf("  -v  --version Display version info\n");
 printf("  -h  --help    Display help messages\n");
 }
-void helpmsg() {
-printf("\n");
+void help_msg() {
+printf("\n\n");
 printf("Report bugs directly to: michkochris@gmail.com\n");
 printf("Or file a bug report on github... \n");
 printf("upkg (ulinux) home page: <https://www.ulinux.com>\n");
@@ -71,12 +71,12 @@ printf("upkg github page <github/upkg>\n");
 printf("ulinux github page <github/ulinux>\n");
 printf("General help using upkg and ulinux: <facebook.group>\n");
 }
-void shortversion() {
+void version_info() {
 printf("upkg (ulinux) 1.0\n");
 }
-void longversion() {
+void license_info() {
 printf("\n");
-printf("Copyright (C) 2007 Free Software Foundation, Inc.\n");
+printf("Copyright (C) 2025 upkg (ulinux) Christoper Michko\n");
 printf("License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n");
 printf("This is free software: you are free to change and redistribute it.\n");
 printf("There is NO WARRANTY, to the extent permitted by law.\n");

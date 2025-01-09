@@ -46,14 +46,18 @@ void process_upkg(char *deb_file) {
 
 int main(int argc, char *argv[]) {
 check_upkgconfig();
-if (argc < 2) {usage();helpmsg();exit(1);}
+if (argc < 2) {usage_info();help_msg();exit(1);}
 for (int i = 1; i < argc; i++) {
 char *filename = argv[i];
 char *extension = strrchr(filename, '.');
 if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-     usage();helpmsg();exit(1);
+     usage_info();help_msg();exit(1);
    } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
-     shortversion();longversion();exit(1);
+     version_info();;exit(1);
+   } else if (strcmp(argv[i], "--license") == 0) {
+     version_info();license_info();exit(1);
+   } else if (strcmp(argv[i], "--config") == 0) {
+     print_config();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
      process_upkg(argv[i]);

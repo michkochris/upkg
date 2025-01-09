@@ -68,38 +68,71 @@ void check_upkgconfig() {
     char *install_dir = get_config_value(configfile, "install_dir");
 
     if (access(configfile, F_OK) == 0) {
-        printf("config=%s\n", configfile);
+        //printf("config=%s\n", configfile);
     } else {
         printf("upkgconfig File does not exist!\n");
+	exit(1);
     }
     if (upkg_dir != NULL) {
 	create_dir(upkg_dir);
-        printf("upkg_dir=%s\n", upkg_dir);
+        //printf("upkg_dir=%s\n", upkg_dir);
         free(upkg_dir);
     } else {
         printf("%s not found in config file!\n", upkg_dir);
+	exit(1);
     }
     if (control_dir != NULL) {
 	remove_dir(control_dir);
 	create_dir(control_dir);
-        printf("control_dir=%s\n", control_dir);
+        //printf("control_dir=%s\n", control_dir);
         free(control_dir);
     } else {
         printf("%s not found in config file!\n", control_dir);
+	exit(1);
     }
     if (unpack_dir != NULL) {
 	remove_dir(unpack_dir);
 	create_dir(unpack_dir);
-        printf("unpack_dir=%s\n", unpack_dir);
+        //printf("unpack_dir=%s\n", unpack_dir);
         free(unpack_dir);
     } else {
         printf("%s not found in config file!\n", unpack_dir);
+	exit(1);
     }
     if (install_dir != NULL) {
 	create_dir(install_dir);
-        printf("install_dir=%s\n\n", install_dir);
+        //printf("install_dir=%s\n\n", install_dir);
         free(install_dir);
     } else {
         printf("%s not found in config file!\n", install_dir);
+	exit(1);
     }
 }
+void print_config() {
+    char *config = "upkgconfig";
+    char *upkg = get_config_value(config, "upkg_dir");
+    char *control = get_config_value(config, "control_dir");
+    char *unpack = get_config_value(config, "unpack_dir");
+    char *install = get_config_value(config, "install_dir");
+    if (access(config, F_OK) == 0) {
+	printf("upkg config settings:\n\n");
+        printf("config=%s\n", config);
+    }
+    if (upkg != NULL) {
+        printf("upkg_dir=%s\n", upkg);
+        free(upkg);
+    }
+    if (control != NULL) {
+        printf("control_dir=%s\n", control);
+	free(control);
+    }
+    if (unpack != NULL) {
+        printf("unpack_dir=%s\n", unpack);
+	free(unpack);
+    }
+    if (install != NULL) {
+        printf("install_dir=%s\n", install);
+        free(install);
+    }
+}
+//end of file

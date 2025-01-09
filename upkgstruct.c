@@ -187,22 +187,9 @@ void printpkginfo(struct Pkginfo controlinfo) {
     printf("Comment: %s\n", controlinfo.comment);}
     if (strlen(controlinfo.description) > 0) {
     printf("Description: %s\n", controlinfo.description);}
-    
 }
-
-void freepkginfo(struct Pkginfo *controlinfo) {
-    free(controlinfo->pkgname);
-    free(controlinfo->version);
-    free(controlinfo->arch);
-    free(controlinfo->maintainer);
-    free(controlinfo->homepage);
-    free(controlinfo->sources);
-    free(controlinfo->section);
-    free(controlinfo->priority);
-    free(controlinfo->depends);
-    free(controlinfo->comment);
-    free(controlinfo->description);
+void resetstruct(struct Pkginfo *p) {
+    memset(p, 0, sizeof(struct Pkginfo));
 }
-
 // end of file
 

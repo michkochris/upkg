@@ -113,7 +113,7 @@ void initialadd() {
     strcpy(newNode->data.description, info.description);
     newNode->next = hashTable[index];
     hashTable[index] = newNode;
-    freepkginfo(&info);
+    resetstruct(&info);
 }
 void initialsearch(char *name) {
     Pkginfo *found = search(name);
@@ -155,6 +155,8 @@ void initialsearch(char *name) {
     } else {
         printf("initialsearch: Not found\n");
     }
+    //resetstruct(&found);
+    free(found);
 }
 void testhash() {
 addpkg("binutils");
