@@ -113,35 +113,48 @@ void initialadd() {
     strcpy(newNode->data.description, info.description);
     newNode->next = hashTable[index];
     hashTable[index] = newNode;
+    freepkginfo(&info);
 }
 void initialsearch(char *name) {
-Pkginfo *found = search(name);
+    Pkginfo *found = search(name);
     if (found != NULL) {
-    printf("printing initialsearch:\n");}
-    if (strlen(found->pkgname) > 0) {
-    printf("Package: %s\n", found->pkgname);}
-    if (strlen(found->version) > 0) {
-    printf("Version: %s\n", found->version);}
-    if (strlen(found->arch) > 0) {
-    printf("Architecture: %s\n", found->arch);}
-    if (strlen(found->maintainer) > 0) {
-    printf("Maintainer: %s\n", found->maintainer);}
-    if (strlen(found->homepage) > 0) {
-    printf("Homepage: %s", found->homepage);}
-    if (strlen(found->sources) > 0) {
-    printf("Source: %s\n", found->sources);}
-    if (strlen(found->section) > 0) {
-    printf("Section: %s", found->section);}
-    if (strlen(found->priority) > 0) {
-    printf("Priority: %s", found->priority);}
-    if (strlen(found->depends) > 0) {
-    printf("Depends: %s\n", found->depends);}
-    if (strlen(found->comment) > 0) {
-    printf("Comment: %s\n", found->comment);}
-    if (strlen(found->description) > 0) {
-    printf("Description: %s\n", found->description);}
-    else {
-    printf("initialsearch: Not found\n");}
+        printf("printing initialsearch:\n");
+        if (strlen(found->pkgname) > 0) {
+            printf("Package: %s\n", found->pkgname);
+        }
+        if (strlen(found->version) > 0) {
+            printf("Version: %s\n", found->version);
+        }
+        if (strlen(found->arch) > 0) {
+            printf("Architecture: %s\n", found->arch);
+        }
+        if (strlen(found->maintainer) > 0) {
+            printf("Maintainer: %s\n", found->maintainer);
+        }
+        if (strlen(found->homepage) > 0) {
+            printf("Homepage: %s", found->homepage);
+        }
+        if (strlen(found->sources) > 0) {
+            printf("Source: %s\n", found->sources);
+        }
+        if (strlen(found->section) > 0) {
+            printf("Section: %s", found->section);
+        }
+        if (strlen(found->priority) > 0) {
+            printf("Priority: %s", found->priority);
+        }
+        if (strlen(found->depends) > 0) {
+            printf("Depends: %s\n", found->depends);
+        }
+        if (strlen(found->comment) > 0) {
+            printf("Comment: %s\n", found->comment);
+        }
+        if (strlen(found->description) > 0) {
+            printf("Description: %s\n", found->description);
+        }
+    } else {
+        printf("initialsearch: Not found\n");
+    }
 }
 void testhash() {
 addpkg("binutils");

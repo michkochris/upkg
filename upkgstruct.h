@@ -24,4 +24,5 @@
 #define UPKGSTRUCT_H
 struct Pkginfo gatherinfo();
 void printpkginfo(struct Pkginfo controlinfo);
+void freepkginfo(struct Pkginfo *controlinfo);
 #endif

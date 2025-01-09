@@ -190,3 +190,19 @@ void printpkginfo(struct Pkginfo controlinfo) {
     
 }
 
+void freepkginfo(struct Pkginfo *controlinfo) {
+    free(controlinfo->pkgname);
+    free(controlinfo->version);
+    free(controlinfo->arch);
+    free(controlinfo->maintainer);
+    free(controlinfo->homepage);
+    free(controlinfo->sources);
+    free(controlinfo->section);
+    free(controlinfo->priority);
+    free(controlinfo->depends);
+    free(controlinfo->comment);
+    free(controlinfo->description);
+}
+
+// end of file
+
