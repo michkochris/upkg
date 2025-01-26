@@ -107,6 +107,18 @@ void print_hash_table() {
         printf("NULL\n");
     }
 }
+void print_suggestions(char *prefix) {
+    int prefix_len = strlen(prefix);
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node *current = hashTable[i];
+        while (current != NULL) {
+            if (strncmp(current->data.pkgname, prefix, prefix_len) == 0) {
+                printf("suggestion: %s\n", current->data.pkgname);
+            }
+            current = current->next;
+        }
+    }
+}
 void initialadd() {
     struct Pkginfo info = gatherinfo();
     //printpkginfo(info);
@@ -188,4 +200,5 @@ printf("search: %s\n", srch->pkgname);
 list();
 print_hash_table();
 glob();
+print_suggestions("b");
 }
