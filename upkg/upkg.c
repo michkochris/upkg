@@ -64,6 +64,10 @@ if (search_hash(argv[i]) != NULL) {
    } else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--list") == 0) {
      list();exit(1);
    } else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--status") == 0) {
+	if (i + 1 >= argc || argv[i + 1][0] == '-') {
+                printf("Error: Option '%s' requires an argument.\n", argv[i]);
+                exit(1);
+            }
      status_search(argv[i + 1]);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
