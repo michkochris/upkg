@@ -58,6 +58,8 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      version_info();license_info();exit(1);
    } else if (strcmp(argv[i], "--config") == 0) {
      print_config();exit(1);
+   } else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--list") == 0) {
+     testhash();list();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
      process_upkg(argv[i]);
@@ -67,6 +69,6 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
    }
 }
 
-testhash();
+//testhash();
 return 0;
 }

@@ -40,5 +40,15 @@ typedef struct Node {
     Pkginfo data;
     struct Node* next;
 } Node;
+int hashFunction(char* name);
+void addpkg(char* name);
+Pkginfo* search(char* name);
+void removepkg(char* name);
+void list();void glob();
+void print_hash_table();
+void print_suggestions(char *prefix);
+void initialadd();
+void initialsearch(char *name);
+
 void testhash();
 #endif
