@@ -42,6 +42,7 @@ void process_upkg(char *deb_file) {
     //printf("controltar=%s\n", controltar);
     extract_deb(deb_file, control_dir);
     extract_tar_xz(controltar, control_dir);
+    testhash();
 }
 
 int main(int argc, char *argv[]) {
@@ -59,7 +60,7 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
    } else if (strcmp(argv[i], "--config") == 0) {
      print_config();exit(1);
    } else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--list") == 0) {
-     testhash();list();exit(1);
+     list();exit(1);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
      process_upkg(argv[i]);

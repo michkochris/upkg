@@ -183,22 +183,22 @@ void initialsearch(char *name) {
     free(found);
 }
 void testhash() {
-addpkg("binutils");
+addpkg("fbinutils");
 addpkg("findutils");
-addpkg("coreutils");
-addpkg("util-linux");
-addpkg("gawk");
-addpkg("bash");
-addpkg("neofetch");
-addpkg("nano");
+addpkg("fcoreutils");
+addpkg("futil-linux");
+addpkg("fgawk");
+addpkg("fbash");
+addpkg("fneofetch");
+addpkg("fnano");
 initialadd();
 initialsearch("file");
-removepkg("bash");
-removepkg("nano");
-Pkginfo *srch = search("file");
-printf("search: %s\n", srch->pkgname);
-list();
-print_hash_table();
-glob();
-print_suggestions("b");
+//removepkg("bash");
+//removepkg("nano");
+//Pkginfo *srch = search("file");
+//printf("search: %s\n", srch->pkgname);
+//list();
+//glob();
+//print_hash_table();
+print_suggestions("f");
 }
