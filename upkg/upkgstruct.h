@@ -23,6 +23,6 @@
 #ifndef UPKGSTRUCT_H
 #define UPKGSTRUCT_H
 struct Pkginfo gatherinfo();
-void printpkginfo(struct Pkginfo controlinfo);
+void printpkginfo(char *name);
 void resetstruct(struct Pkginfo *p);
 #endif

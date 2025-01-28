@@ -49,6 +49,7 @@ struct Pkginfo gatherinfo() {
         }
     } else {
         printf("Package: is mandatory!\n");
+	exit(1);
     }
     char *version_search = search_file(controlfile, "Version: ");
     if (version_search != NULL) {
@@ -61,6 +62,7 @@ struct Pkginfo gatherinfo() {
         }
     } else {
         printf("Version: is mandatory!\n");
+	exit(1);
     }
     char *arch_search = search_file(controlfile, "Architecture: ");
     if (arch_search != NULL) {
@@ -73,6 +75,7 @@ struct Pkginfo gatherinfo() {
         }
     } else {
         printf("Architecture: is mandatory!\n");
+	exit(1);
     }
     char *maintainer_search = search_file(controlfile, "Maintainer: ");
     if (maintainer_search != NULL) {
@@ -85,6 +88,7 @@ struct Pkginfo gatherinfo() {
         }
     } else {
         printf("Maintainer: is mandatory!\n");
+	exit(1);
     }
     char *homepage_search = search_file(controlfile, "Homepage: ");
     if (homepage_search != NULL) {
@@ -95,7 +99,7 @@ struct Pkginfo gatherinfo() {
             printf("Homepage: field is found but is empty!\n");
         }
     } else {
-        printf("Homepage: is recommended!\n");
+        //printf("Homepage: is recommended!\n");
     }
     char *sources_search = search_file(controlfile, "Source: ");
     if (sources_search != NULL) {
@@ -106,7 +110,7 @@ struct Pkginfo gatherinfo() {
             printf("Source: field is found but is empty!\n");
         }
     } else {
-        printf("Source: is recommended!\n");
+        //printf("Source: is recommended!\n");
     }
     char *section_search = search_file(controlfile, "Section: ");
     if (section_search != NULL) {
@@ -117,7 +121,7 @@ struct Pkginfo gatherinfo() {
             printf("Section: field is found but is empty!\n");
         }
     } else {
-        printf("Section: is recommended!\n");
+        //printf("Section: is recommended!\n");
     }
     char *priority_search = search_file(controlfile, "Priority: ");
     if (priority_search != NULL) {
@@ -128,7 +132,7 @@ struct Pkginfo gatherinfo() {
             printf("Priority: field is found but is empty!\n");
         }
     } else {
-        printf("Priority: is recommended!\n");
+        //printf("Priority: is recommended!\n");
     }
     char *depends_search = search_file(controlfile, "Depends: ");
     if (depends_search != NULL) {
@@ -139,7 +143,7 @@ struct Pkginfo gatherinfo() {
             printf("Depends: field is found but is empty!\n");
         }
     } else {
-        printf("Depends: is recommended!\n");
+        //printf("Depends: is recommended!\n");
     }
     char *comment_search = search_file(controlfile, "Comment: ");
     if (comment_search != NULL) {
@@ -147,7 +151,7 @@ struct Pkginfo gatherinfo() {
 	strcpy(controlinfo.comment, comment_search);
 	free(comment_search);
     } else {
-        printf("Comment: is not recommended!\n");
+        //printf("Comment: is not recommended!\n");
     }
     char *description_search = searchandreadtoend(controlfile, "Description: ");
     if (description_search != NULL) {
@@ -159,34 +163,36 @@ struct Pkginfo gatherinfo() {
         }
     } else {
         printf("Description: field is mandatory!\n");
+	exit(1);
     }
    return controlinfo;
 }
 
-void printpkginfo(struct Pkginfo controlinfo) {
+void printpkginfo(char *name) {
+    Pkginfo *controlinfo = search(name);
     printf("\nprinting pkg struct:\n");
-    if (strlen(controlinfo.pkgname) > 0) {
-    printf("Package: %s\n", controlinfo.pkgname);}
-    if (strlen(controlinfo.version) > 0) {
-    printf("Version: %s\n", controlinfo.version);}
-    if (strlen(controlinfo.arch) > 0) {
-    printf("Architecture: %s\n", controlinfo.arch);}
-    if (strlen(controlinfo.maintainer) > 0) {
-    printf("Maintainer: %s\n", controlinfo.maintainer);}
-    if (strlen(controlinfo.homepage) > 0) {
-    printf("Homepage: %s", controlinfo.homepage);}
-    if (strlen(controlinfo.sources) > 0) {
-    printf("Source: %s", controlinfo.sources);}
-    if (strlen(controlinfo.section) > 0) {
-    printf("Section: %s", controlinfo.section);}
-    if (strlen(controlinfo.priority) > 0) {
-    printf("Priority: %s", controlinfo.priority);}
-    if (strlen(controlinfo.depends) > 0) {
-    printf("Depends: %s\n", controlinfo.depends);}
-    if (strlen(controlinfo.comment) > 0) {
-    printf("Comment: %s\n", controlinfo.comment);}
-    if (strlen(controlinfo.description) > 0) {
-    printf("Description: %s\n", controlinfo.description);}
+    if (strlen(controlinfo->pkgname) > 0) {
+    printf("Package: %s\n", controlinfo->pkgname);}
+    if (strlen(controlinfo->version) > 0) {
+    printf("Version: %s\n", controlinfo->version);}
+    if (strlen(controlinfo->arch) > 0) {
+    printf("Architecture: %s\n", controlinfo->arch);}
+    if (strlen(controlinfo->maintainer) > 0) {
+    printf("Maintainer: %s\n", controlinfo->maintainer);}
+    if (strlen(controlinfo->homepage) > 0) {
+    printf("Homepage: %s", controlinfo->homepage);}
+    if (strlen(controlinfo->sources) > 0) {
+    printf("Source: %s", controlinfo->sources);}
+    if (strlen(controlinfo->section) > 0) {
+    printf("Section: %s", controlinfo->section);}
+    if (strlen(controlinfo->priority) > 0) {
+    printf("Priority: %s", controlinfo->priority);}
+    if (strlen(controlinfo->depends) > 0) {
+    printf("Depends: %s\n", controlinfo->depends);}
+    if (strlen(controlinfo->comment) > 0) {
+    printf("Comment: %s\n", controlinfo->comment);}
+    if (strlen(controlinfo->description) > 0) {
+    printf("Description: %s\n", controlinfo->description);}
 }
 void resetstruct(struct Pkginfo *p) {
     memset(p, 0, sizeof(struct Pkginfo));

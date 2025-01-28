@@ -58,6 +58,17 @@ Pkginfo* search(char* name) {
     }
     return NULL;
 }
+char *search_hash(char *name) {
+    int index = hashFunction(name);
+    Node *entry = hashTable[index];
+    while (entry != NULL) {
+        if (strcmp(entry->data.pkgname, name) == 0) {
+            return entry->data.pkgname;
+        }
+        entry = entry->next;
+    }
+    return NULL;
+}
 void removepkg(char* name) {
     int index = hashFunction(name);
     Node* current = hashTable[index];
@@ -107,18 +118,32 @@ void print_hash_table() {
         printf("NULL\n");
     }
 }
+#define MAX_SUGGESTIONS 10
+char **suggestions(char *name) {
+    char **suggestions = (char **)malloc(MAX_SUGGESTIONS * sizeof(char *));
+    int count = 0;
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (hashTable[i] != NULL && strncmp(name, hashTable[i]->data.pkgname, strlen(name)) == 0) {
+            suggestions[count++] = strdup(hashTable[i]->data.pkgname);
+            if (count >= MAX_SUGGESTIONS) break;
+        }
+    }
+    suggestions[count] = NULL; // Null-terminate the array
+    return suggestions;
+}
 void print_suggestions(char *prefix) {
     int prefix_len = strlen(prefix);
     for (int i = 0; i < TABLE_SIZE; i++) {
         Node *current = hashTable[i];
         while (current != NULL) {
-            if (strncmp(current->data.pkgname, prefix, prefix_len) == 0) {
-                printf("suggestion: %s\n", current->data.pkgname);
+            if (strncmp(current->data.pkgname, prefix, strlen(prefix)) == 0) {
+                printf("%s\n", current->data.pkgname);
             }
             current = current->next;
         }
     }
 }
+
 void initialadd() {
     struct Pkginfo info = gatherinfo();
     //printpkginfo(info);
@@ -139,10 +164,10 @@ void initialadd() {
     hashTable[index] = newNode;
     resetstruct(&info);
 }
-void initialsearch(char *name) {
+void status_search(char *name) {
     Pkginfo *found = search(name);
     if (found != NULL) {
-        printf("printing initialsearch:\n");
+        printf("status search:\n\n");
         if (strlen(found->pkgname) > 0) {
             printf("Package: %s\n", found->pkgname);
         }
@@ -168,7 +193,7 @@ void initialsearch(char *name) {
             printf("Priority: %s", found->priority);
         }
         if (strlen(found->depends) > 0) {
-            printf("Depends: %s\n", found->depends);
+            printf("Depends: %s", found->depends);
         }
         if (strlen(found->comment) > 0) {
             printf("Comment: %s\n", found->comment);
@@ -177,7 +202,7 @@ void initialsearch(char *name) {
             printf("Description: %s\n", found->description);
         }
     } else {
-        printf("initialsearch: Not found\n");
+        printf("status search: %s Not found\n\n", name);
     }
     //resetstruct(&found);
     free(found);
@@ -192,7 +217,7 @@ addpkg("fbash");
 addpkg("fneofetch");
 addpkg("fnano");
 initialadd();
-initialsearch("file");
+//initialsearch("file");
 //removepkg("bash");
 //removepkg("nano");
 //Pkginfo *srch = search("file");
@@ -200,5 +225,5 @@ initialsearch("file");
 //list();
 //glob();
 //print_hash_table();
-print_suggestions("f");
+//print_suggestions("f");
 }

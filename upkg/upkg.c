@@ -51,7 +51,9 @@ if (argc < 2) {usage_info();help_msg();exit(1);}
 for (int i = 1; i < argc; i++) {
 char *filename = argv[i];
 char *extension = strrchr(filename, '.');
-if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+if (search_hash(argv[i]) != NULL) {
+     printf("Package '%s' is installed.\n", argv[i]);
+   } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      usage_info();help_msg();exit(1);
    } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
      version_info();;exit(1);
@@ -61,11 +63,15 @@ if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
      print_config();exit(1);
    } else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "--list") == 0) {
      list();exit(1);
+   } else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--status") == 0) {
+     status_search(argv[i + 1]);
    } else if (extension != NULL && strcmp(extension, ".deb") == 0) {
      printf("processing %s\n\n", argv[i]);
      process_upkg(argv[i]);
    } else {
      printf("Invalid option: %s\n", argv[i]);
+     printf("Package '%s' not installed, did you mean:\n", argv[i]);
+     print_suggestions(argv[i]);
      exit(1);
    }
 }

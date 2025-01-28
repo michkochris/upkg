@@ -43,12 +43,14 @@ typedef struct Node {
 int hashFunction(char* name);
 void addpkg(char* name);
 Pkginfo* search(char* name);
+char *search_hash(char *name);
 void removepkg(char* name);
 void list();void glob();
 void print_hash_table();
+char **suggestions(char *name);
 void print_suggestions(char *prefix);
 void initialadd();
-void initialsearch(char *name);
+void status_search(char *name);
 
 void testhash();
 #endif
