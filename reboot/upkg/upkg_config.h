@@ -50,4 +50,17 @@ int load_upkg_config();
  */
 void upkg_cleanup_paths();
 
+/**
+ * @brief Gets the path to the configuration file currently in use.
+ *
+ * This function determines which configuration file is being used by checking:
+ * 1. The UPKG_CONFIG_PATH environment variable.
+ * 2. The system-wide location at /etc/upkg/upkgconfig.
+ * 3. The user-specific location at ~/.upkgconfig.
+ *
+ * @return A dynamically allocated string containing the config file path,
+ *         or NULL if no config file is found. The caller is responsible for freeing the returned string.
+ */
+char *upkg_get_config_file_path();
+
 #endif // UPKG_CONFIG_H

@@ -16,7 +16,7 @@ bool g_verbose_mode = false;
  */
 void upkg_log_verbose(const char *format, ...) {
     if (!g_verbose_mode) return;
-    
+
     va_list args;
     va_start(args, format);
     printf("[VERBOSE] ");
@@ -40,8 +40,10 @@ void usage(void) {
     printf("  -s, --status <package-name>             Show detailed information about a package.\n");
     printf("  -S, --search <query>                    Search for a package by name.\n");
     printf("  -v, --verbose                           Enable verbose output.\n");
-    printf("  --version                               Print version information.\n");
+    printf("      --version                           Print version information.\n");
     printf("  -h, --help                              Display this help message.\n\n");
+    printf("      --print-config                      Print current configuration settings.\n");
+    printf("      --print-config-file                 Print path to configuration file in use.\n");
     printf("Note: Commands can be interleaved, e.g., 'upkg -v -i pkg1.deb -s pkg2 -i pkg3.deb'\n");
 }
 
@@ -138,6 +140,61 @@ void handle_search(const char *query) {
     printf("Searching for packages with query: %s (placeholder)\n", query);
 }
 
+/**
+ * @brief Prints the current configuration values.
+ */
+void handle_print_config(void) {
+    printf("upkg Configuration:\n");
+    printf("==================\n");
+    if (g_upkg_base_dir) {
+        printf("  Base Directory:     %s\n", g_upkg_base_dir);
+    } else {
+        printf("  Base Directory:     (not set)\n");
+    }
+    if (g_control_dir) {
+        printf("  Control Directory:  %s\n", g_control_dir);
+    } else {
+        printf("  Control Directory:  (not set)\n");
+    }
+    if (g_unpack_dir) {
+        printf("  Unpack Directory:   %s\n", g_unpack_dir);
+    } else {
+        printf("  Unpack Directory:   (not set)\n");
+    }
+    if (g_install_dir_internal) {
+        printf("  Install Directory:  %s\n", g_install_dir_internal);
+    } else {
+        printf("  Install Directory:  (not set)\n");
+    }
+    if (g_system_install_root) {
+        printf("  System Install Root: %s\n", g_system_install_root);
+    } else {
+        printf("  System Install Root: (not set)\n");
+    }
+     if (g_db_dir) {
+        printf("  Database Directory: %s\n", g_db_dir);
+    } else {
+        printf("  Database Directory: (not set)\n");
+    }
+}
+
+/**
+ * @brief Prints the path to the configuration file in use.
+ */
+void handle_print_config_file(void) {
+    char *config_path = upkg_get_config_file_path();
+    if (config_path) {
+        printf("Configuration file in use: %s\n", config_path);
+        free(config_path);
+    } else {
+        printf("No configuration file found.\n");
+        printf("Searched locations:\n");
+        printf("  1. $UPKG_CONFIG_PATH environment variable\n");
+        printf("  2. /etc/upkg/upkgconfig (system-wide)\n");
+        printf("  3. ~/.upkgconfig (user-specific)\n");
+    }
+}
+
 // --- Main Function ---
 int main(int argc, char *argv[]) {
     // Check for verbose mode first, as it affects all subsequent output.
@@ -156,6 +213,21 @@ int main(int argc, char *argv[]) {
         }
         if (strcmp(argv[i], "--version") == 0) {
             handle_version();
+            return EXIT_SUCCESS;
+        }
+        if (strcmp(argv[i], "--print-config") == 0) {
+            // Initialize first to load config, then print
+            if (upkg_init() != 0) {
+                fprintf(stderr, "ERROR: Failed to initialize upkg configuration\n");
+                return EXIT_FAILURE;
+            }
+            handle_print_config();
+            upkg_cleanup();
+            return EXIT_SUCCESS;
+        }
+        if (strcmp(argv[i], "--print-config-file") == 0) {
+            // No need to initialize for this - just find the config file
+            handle_print_config_file();
             return EXIT_SUCCESS;
         }
     }

@@ -98,34 +98,47 @@ create-user-config:
 	fi
 
 # The main install target for standard Linux systems
-# This installs the binary to PREFIX/bin and config to ETCDIR/upkg/
-# To install, run 'sudo make install'
+# This installs the binary to PREFIX/bin and config based on privileges
+# With sudo/elevated privileges: installs config to ETCDIR/upkg/upkgconfig
+# Without sudo: installs config to ~/.upkgconfig
+# To install with system config, run 'sudo make install'
+# To install with user config, run 'make install'
 # To create a package, run 'make DESTDIR=/path/to/staging/ install'
 install: all
 	@echo "Installing $(TARGET) for Linux system to $(DESTDIR)$(PREFIX)/bin..."
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/$(TARGET)
-	@echo "Installing system-wide configuration to $(DESTDIR)$(ETCDIR)/upkg..."
-	mkdir -p $(DESTDIR)$(ETCDIR)/upkg
+	@echo "Determining configuration installation location..."
 	@if [ -f upkgconfig ]; then \
-		cp upkgconfig $(DESTDIR)$(ETCDIR)/upkg/upkgconfig; \
-		chmod 644 $(DESTDIR)$(ETCDIR)/upkg/upkgconfig; \
-		echo "Configuration file installed to $(ETCDIR)/upkg/upkgconfig"; \
+		if [ "$(shell id -u)" = "0" ] || [ -w "$(DESTDIR)$(ETCDIR)" ] 2>/dev/null; then \
+			echo "Installing system-wide configuration to $(DESTDIR)$(ETCDIR)/upkg..."; \
+			mkdir -p $(DESTDIR)$(ETCDIR)/upkg; \
+			cp upkgconfig $(DESTDIR)$(ETCDIR)/upkg/upkgconfig; \
+			chmod 644 $(DESTDIR)$(ETCDIR)/upkg/upkgconfig; \
+			echo "Configuration file installed to $(ETCDIR)/upkg/upkgconfig"; \
+			echo "=== Linux Installation Complete (System-wide) ==="; \
+			echo "Binary: $(PREFIX)/bin/$(TARGET)"; \
+			echo "System config: $(ETCDIR)/upkg/upkgconfig"; \
+		else \
+			echo "No elevated privileges detected. Installing user-specific configuration..."; \
+			cp upkgconfig ~/.upkgconfig; \
+			chmod 644 ~/.upkgconfig; \
+			echo "Configuration file installed to ~/.upkgconfig"; \
+			echo "=== Linux Installation Complete (User-specific) ==="; \
+			echo "Binary: $(PREFIX)/bin/$(TARGET)"; \
+			echo "User config: ~/.upkgconfig"; \
+		fi; \
 	else \
 		echo "WARNING: upkgconfig file not found in current directory!"; \
 	fi
-	@echo ""
-	@echo "=== Linux Installation Complete ==="
-	@echo "Binary: $(PREFIX)/bin/$(TARGET)"
-	@echo "System config: $(ETCDIR)/upkg/upkgconfig"
 	@echo ""
 	@echo "The cascading configuration will check:"
 	@echo "  1. \$$UPKG_CONFIG_PATH environment variable"
 	@echo "  2. $(ETCDIR)/upkg/upkgconfig (system-wide)"
 	@echo "  3. ~/.upkgconfig (user-specific)"
 	@echo ""
-	@echo "To create a user-specific config, run: make create-user-config"
+	@echo "To manually create a user-specific config, run: make create-user-config"
 
 # Termux-specific install target
 # This installs the binary to TERMUX_PREFIX/bin and creates user config at ~/.upkgconfig
@@ -159,17 +172,33 @@ termux-install: all
 # Uninstall target for both standard Linux and Termux
 uninstall:
 	@echo "Attempting to uninstall $(TARGET)..."
-	# Standard Linux uninstall
+	# Standard Linux uninstall - check for elevated privileges
 	@if [ -f $(PREFIX)/bin/$(TARGET) ]; then \
 		echo "Removing $(PREFIX)/bin/$(TARGET)..."; \
-		rm -f $(PREFIX)/bin/$(TARGET); \
-		echo "Linux binary removed."; \
+		if [ "$(shell id -u)" = "0" ] || [ -w "$(PREFIX)/bin" ] 2>/dev/null; then \
+			rm -f $(PREFIX)/bin/$(TARGET); \
+			echo "Linux binary removed."; \
+		else \
+			echo "ERROR: Need elevated privileges to remove $(PREFIX)/bin/$(TARGET)"; \
+			echo "Please run: sudo make uninstall"; \
+		fi; \
 	fi
+	# Remove system config if we have privileges
 	@if [ -f $(ETCDIR)/upkg/upkgconfig ]; then \
 		echo "Removing $(ETCDIR)/upkg/upkgconfig..."; \
-		rm -f $(ETCDIR)/upkg/upkgconfig; \
-		rmdir $(ETCDIR)/upkg 2>/dev/null || true; \
-		echo "Linux system config removed."; \
+		if [ "$(shell id -u)" = "0" ] || [ -w "$(ETCDIR)/upkg" ] 2>/dev/null; then \
+			rm -f $(ETCDIR)/upkg/upkgconfig; \
+			rmdir $(ETCDIR)/upkg 2>/dev/null || true; \
+			echo "Linux system config removed."; \
+		else \
+			echo "System config exists but cannot be removed without elevated privileges."; \
+		fi; \
+	fi
+	# Remove user config if it exists (no privileges needed)
+	@if [ -f ~/.upkgconfig ]; then \
+		echo "Found user config at ~/.upkgconfig"; \
+		echo "NOTE: User-specific config file ~/.upkgconfig was NOT automatically removed."; \
+		echo "To remove it manually, run: rm ~/.upkgconfig"; \
 	fi
 	# Termux uninstall
 	@if [ -f $(TERMUX_PREFIX)/bin/$(TARGET) ]; then \
@@ -178,8 +207,6 @@ uninstall:
 		echo "Termux binary removed."; \
 	fi
 	@echo "Uninstallation complete."
-	@echo "NOTE: User-specific config file ~/.upkgconfig was NOT removed."
-	@echo "To remove it manually, run: rm ~/.upkgconfig"
 
 # Debug build with extra debugging symbols and verbose output
 debug: CFLAGS += -DDEBUG -O0
@@ -224,12 +251,12 @@ info:
 	@echo ""
 	@echo "=== Available Targets ==="
 	@echo "make               - Build the binary"
-	@echo "make install       - Install for Linux (needs sudo)"
+	@echo "make install       - Install for Linux (sudo for system config, user config otherwise)"
 	@echo "make termux-install - Install for Termux"
 	@echo "make create-user-config - Create ~/.upkgconfig"
 	@echo "make test          - Build and test basic functionality"
 	@echo "make clean         - Clean build artifacts"
-	@echo "make uninstall     - Remove installed files"
+	@echo "make uninstall     - Remove installed files (sudo may be needed)"
 	@echo "make debug         - Build with debug flags"
 	@echo "make info          - Show this information"
 	@echo "=========================="

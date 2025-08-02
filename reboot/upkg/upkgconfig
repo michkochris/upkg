@@ -46,7 +46,7 @@ install_dir=~/upkg_dir/installdir
 
 # directory where upkg stores its persistent package database
 # a subdirectory for each installed package and a binary Pkginfo file inside
-db_dir=~/upkg_dir/db
+db_dir=~/upkg_dir/upkg_db
 
 
 # end of file...

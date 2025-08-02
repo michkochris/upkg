@@ -253,7 +253,7 @@ static char *get_config_value(const char *filepath, const char *key, char separa
 }
 
 // --- Helper function to find the correct configuration file path ---
-static char *get_config_path() {
+char *upkg_get_config_file_path() {
     char *config_file_path = NULL;
 
     // 1. Check for environment variable override
@@ -303,9 +303,9 @@ static char *get_config_path() {
 }
 
 int load_upkg_config() {
-    char *config_file_path = get_config_path();
+    char *config_file_path = upkg_get_config_file_path();
     if (!config_file_path) {
-        // Error message already printed by get_config_path
+        // Error message already printed by upkg_get_config_file_path
         return -1;
     }
 
