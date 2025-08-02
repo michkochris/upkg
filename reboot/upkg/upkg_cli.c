@@ -6,6 +6,7 @@
 
 #include "upkg_config.h"
 #include "upkg_pack.h"
+#include "upkg_hash.h"
 
 // Global variables
 bool g_verbose_mode = false;
@@ -77,6 +78,12 @@ int upkg_init(void) {
 void upkg_cleanup(void) {
     upkg_log_verbose("Cleaning up upkg environment...\n");
     
+    // Clean up hash table if it exists
+    if (upkg_main_hash_table) {
+        upkg_hash_destroy_table(upkg_main_hash_table);
+        upkg_main_hash_table = NULL;
+    }
+    
     // Clean up configuration paths
     upkg_cleanup_paths();
     
@@ -121,6 +128,39 @@ void handle_install(const char *deb_file_path) {
         
         // Print the collected package information
         upkg_pack_print_package_info(&pkg_info);
+        
+        // Initialize hash table if not already created
+        if (!upkg_main_hash_table) {
+            upkg_main_hash_table = upkg_hash_create_table(INITIAL_HASH_TABLE_SIZE);
+            if (!upkg_main_hash_table) {
+                printf("Warning: Failed to create hash table for package management.\n");
+            } else {
+                upkg_log_verbose("Hash table initialized for package management.\n");
+            }
+        }
+        
+        // Add package to hash table if table exists
+        if (upkg_main_hash_table) {
+            upkg_hash_package_info_t hash_pkg_info;
+            if (upkg_hash_convert_package_info(&pkg_info, &hash_pkg_info) == 0) {
+                if (upkg_hash_add_package(upkg_main_hash_table, &hash_pkg_info) == 0) {
+                    printf("Package successfully added to internal database.\n\n");
+                    
+                    // Test: Search and print from hash table to verify integrity
+                    upkg_hash_package_info_t *stored_pkg = upkg_hash_search(upkg_main_hash_table, pkg_info.package_name);
+                    if (stored_pkg) {
+                        upkg_hash_print_package_info(stored_pkg);
+                    } else {
+                        printf("Warning: Package not found in hash table after adding.\n");
+                    }
+                } else {
+                    printf("Warning: Failed to add package to internal database.\n");
+                }
+                // Note: hash_pkg_info memory is managed by the hash table now
+            } else {
+                printf("Warning: Failed to convert package info for hash table.\n");
+            }
+        }
         
         if (g_verbose_mode && g_system_install_root) {
             printf("Installation Configuration:\n");

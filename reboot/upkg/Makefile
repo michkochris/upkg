@@ -32,12 +32,12 @@ LIBS =
 
 TARGET = upkg
 
-# Source files - Updated to include utility and package functions
-SRCS = upkg_cli.c upkg_config.c upkg_util.c upkg_pack.c
+# Source files - Updated to include utility, package, and hash functions
+SRCS = upkg_cli.c upkg_config.c upkg_util.c upkg_pack.c upkg_hash.c
 OBJS = $(SRCS:.c=.o)
 
 # Header dependencies
-HEADERS = upkg_config.h upkg_util.h upkg_pack.h
+HEADERS = upkg_config.h upkg_util.h upkg_pack.h upkg_hash.h
 
 # Phony targets
 .PHONY: all clean install debug run termux-install create-user-config uninstall test info
