@@ -5,6 +5,7 @@
 #include <stdarg.h>
 
 #include "upkg_config.h"
+#include "upkg_pack.h"
 
 // Global variables
 bool g_verbose_mode = false;
@@ -96,16 +97,47 @@ void errormsg(const char *format, ...) {
 }
 
 /**
- * @brief Handles package installation (placeholder).
+ * @brief Handles package installation with info collection and display.
  */
 void handle_install(const char *deb_file_path) {
     upkg_log_verbose("Installing package from: %s\n", deb_file_path);
-    printf("Installing package from: %s (placeholder)\n", deb_file_path);
-    if (g_control_dir && g_unpack_dir && g_system_install_root) {
-        upkg_log_verbose("  Control dir: %s\n", g_control_dir);
-        upkg_log_verbose("  Unpack dir: %s\n", g_unpack_dir);
-        upkg_log_verbose("  Install root: %s\n", g_system_install_root);
+    printf("Installing package from: %s\n", deb_file_path);
+    
+    if (!g_control_dir) {
+        printf("Error: Control directory not configured. Please check your upkg configuration.\n");
+        return;
     }
+    
+    // Initialize package info structure
+    upkg_package_info_t pkg_info;
+    upkg_pack_init_package_info(&pkg_info);
+    
+    // Extract package and collect information
+    printf("\nExtracting package and collecting information...\n");
+    int result = upkg_pack_extract_and_collect_info(deb_file_path, g_control_dir, &pkg_info);
+    
+    if (result == 0) {
+        printf("Package extraction successful!\n\n");
+        
+        // Print the collected package information
+        upkg_pack_print_package_info(&pkg_info);
+        
+        if (g_verbose_mode && g_system_install_root) {
+            printf("Installation Configuration:\n");
+            printf("=========================\n");
+            printf("  Control dir: %s\n", g_control_dir);
+            printf("  Install root: %s\n", g_system_install_root);
+            printf("\n");
+        }
+        
+        printf("Package information collection completed successfully.\n");
+        printf("Note: Actual installation logic is not yet implemented.\n");
+    } else {
+        printf("Error: Failed to extract package or collect information.\n");
+    }
+    
+    // Clean up allocated memory
+    upkg_pack_free_package_info(&pkg_info);
 }
 
 /**
@@ -155,11 +187,6 @@ void handle_print_config(void) {
         printf("  Control Directory:  %s\n", g_control_dir);
     } else {
         printf("  Control Directory:  (not set)\n");
-    }
-    if (g_unpack_dir) {
-        printf("  Unpack Directory:   %s\n", g_unpack_dir);
-    } else {
-        printf("  Unpack Directory:   (not set)\n");
     }
     if (g_install_dir_internal) {
         printf("  Install Directory:  %s\n", g_install_dir_internal);

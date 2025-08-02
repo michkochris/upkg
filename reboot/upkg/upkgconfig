@@ -33,16 +33,12 @@ upkg_dir=~/upkg_dir
 
 # directory where upkg unpacks .deb pkg info
 # where upkg processes .deb control files  
-control_dir=~/upkg_dir/controldir
-
-# directory where upkg unpacks pkg files
-# upkg creates a list of files to be installed
-unpack_dir=~/upkg_dir/unpackdir
+control_dir=~/upkg_dir/control_dir
 
 # main directory where upkg installs programs
 # normally / unless testing and developing
 #installdir=
-install_dir=~/upkg_dir/installdir
+install_dir=~/upkg_dir/install_dir
 
 # directory where upkg stores its persistent package database
 # a subdirectory for each installed package and a binary Pkginfo file inside

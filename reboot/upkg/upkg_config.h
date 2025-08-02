@@ -13,7 +13,6 @@
 // --- Global Path Variables Declarations ---
 extern char *g_upkg_base_dir;
 extern char *g_control_dir;
-extern char *g_unpack_dir;
 extern char *g_db_dir; // New declaration for the database directory
 extern char *g_install_dir_internal;
 extern char *g_system_install_root;

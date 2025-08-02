@@ -99,9 +99,6 @@ upkg_dir=~/upkg_dir
 # Control files extraction
 control_dir=~/upkg_dir/controldir
 
-# Package files extraction  
-unpack_dir=~/upkg_dir/unpackdir
-
 # Installation target
 install_dir=~/upkg_dir/installdir
 

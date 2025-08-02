@@ -140,9 +140,6 @@ upkg_dir=~/upkg_dir
 # Control files extraction
 control_dir=~/upkg_dir/controldir
 
-# Package files extraction  
-unpack_dir=~/upkg_dir/unpackdir
-
 # Installation target (/ for system, ~/upkg_dir/installdir for testing)
 install_dir=~/upkg_dir/installdir
 
